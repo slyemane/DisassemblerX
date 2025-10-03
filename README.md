@@ -1,4 +1,4 @@
-```markdown
+
 # DisassemblerX 🔍
 
 <div align="center">
@@ -562,4 +562,3 @@ If you find DisassemblerX useful, please consider starring the repository!
   [Report Bug](https://github.com/slyemane/DisassemblerX/issues) · [Request Feature](https://github.com/slyemane/DisassemblerX/issues) · [Contact Author](https://github.com/slyemane)
   
 </div>
-```
