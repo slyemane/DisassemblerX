@@ -1,0 +1,774 @@
+@media (max-width: 768px) {
+            nav {
+                padding: 1rem <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DisassemblerX - Professional x86-64 Disassembler</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .grid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2.5rem;
+            background: rgba(25, 25, 25, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            max-width: 900px;
+            width: calc(100% - 4rem);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        nav:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.7);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: #e0e0e0;
+            font-weight: 300;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a {
+            position: relative;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem 5%;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .ascii-art {
+            font-family: 'Courier New', monospace;
+            font-size: 0.65rem;
+            line-height: 1.2;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2.5rem;
+            white-space: pre;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+            50% { text-shadow: 0 0 30px rgba(255, 255, 255, 0.5); }
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+            letter-spacing: -2px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tagline {
+            font-size: 1.4rem;
+            color: #c0c0c0;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .badges {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.7rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .btn {
+            padding: 1.2rem 3rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ffffff 0%, #d0d0d0 100%);
+            color: #0a0a0a;
+            font-weight: bold;
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+            border-color: #fff;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .features {
+            padding: 6rem 5%;
+            background: linear-gradient(180deg, rgba(20, 20, 20, 0.5) 0%, rgba(10, 10, 10, 0.8) 100%);
+            position: relative;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            color: #fff;
+            font-weight: 800;
+            letter-spacing: -1px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent 0%, #ffffff 50%, transparent 100%);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: rgba(30, 30, 30, 0.6);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%);
+            transition: left 0.8s;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            background: rgba(40, 40, 40, 0.8);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            transition: transform 0.5s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .feature-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: #b0b0b0;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .code-preview {
+            padding: 6rem 5%;
+            position: relative;
+        }
+
+        .code-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+        }
+
+        .code-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #151515;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+            transition: all 0.5s ease;
+        }
+
+        .code-container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+        }
+
+        .code-header {
+            background: #1f1f1f;
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-dot {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .code-dot:hover {
+            transform: scale(1.2);
+        }
+
+        .dot-red { background: #ff5f56; box-shadow: 0 0 10px #ff5f56; }
+        .dot-yellow { background: #ffbd2e; box-shadow: 0 0 10px #ffbd2e; }
+        .dot-green { background: #27c93f; box-shadow: 0 0 10px #27c93f; }
+
+        .code-content {
+            padding: 2.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 2;
+            overflow-x: auto;
+            background: #151515;
+        }
+
+        .code-line {
+            display: flex;
+            gap: 2rem;
+            transition: all 0.2s ease;
+            padding: 0.3rem 0.5rem;
+            border-radius: 5px;
+        }
+
+        .code-line:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .code-address {
+            color: #909090;
+            font-weight: 600;
+        }
+
+        .code-bytes {
+            color: #606060;
+        }
+
+        .code-instruction {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .code-operands {
+            color: #d0d0d0;
+        }
+
+        .stats {
+            padding: 6rem 5%;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(10, 10, 10, 0.8) 0%, rgba(20, 20, 20, 0.5) 100%);
+            position: relative;
+        }
+
+        .stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 4rem auto 0;
+        }
+
+        .stat-item {
+            padding: 2.5rem;
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-10px) scale(1.05);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            background: rgba(40, 40, 40, 0.8);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            transition: all 0.5s ease;
+        }
+
+        .stat-item:hover .stat-number {
+            transform: scale(1.1);
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
+        }
+
+        .stat-label {
+            color: #b0b0b0;
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        footer {
+            background: rgba(15, 15, 15, 0.95);
+            padding: 4rem 5%;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            text-align: center;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+        }
+
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .footer-links a {
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ffffff;
+            transition: width 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        .copyright {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .tagline { font-size: 1.1rem; }
+            .cta-buttons { flex-direction: column; }
+            .ascii-art { font-size: 0.4rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-background"></div>
+    
+    <div class="content">
+        <nav>
+            <div class="logo">Disassembler<span>X</span></div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#stats">Stats</a></li>
+                <li><a href="https://github.com/slyemane/DisassemblerX">GitHub</a></li>
+            </ul>
+        </nav>
+
+        <section class="hero">
+            <div class="ascii-art">     ____  _                                   _     _          __  __
+    |  _ \(_)___  __ _ ___ ___  ___ _ __ ___ | |__ | | ___ _ __\ \/ /
+    | | | | / __|/ _` / __/ __|/ _ \ '_ ` _ \| '_ \| |/ _ \ '__| \  /
+    | |_| | \__ \ (_| \__ \__ \  __/ | | | | | |_) | |  __/ |   /  \
+    |____/|_|___/\__,_|___/___/\___|_| |_| |_|_.__/|_|\___|_|  /_/\_\</div>
+            
+            <h1>DisassemblerX</h1>
+            <p class="tagline">Professional x86-64 Disassembler Built from Scratch</p>
+            
+            <div class="badges">
+                <span class="badge">🚀 Zero Dependencies</span>
+                <span class="badge">⚡ High Performance</span>
+                <span class="badge">🔬 Production Ready</span>
+                <span class="badge">💎 Pure C++</span>
+            </div>
+
+            <div class="cta-buttons">
+                <a href="https://github.com/slyemane/DisassemblerX/releases" class="btn btn-primary">Download v1.0.0</a>
+                <a href="https://github.com/slyemane/DisassemblerX" class="btn btn-secondary">View on GitHub</a>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <h2 class="section-title">Core Capabilities</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Advanced Decoding</h3>
+                    <p>Complete x86-64 instruction set support with REX prefixes, ModR/M, SIB byte parsing, and displacement handling.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>PE Format Support</h3>
+                    <p>Full Windows PE32/PE32+ executable parsing with automatic section detection and entry point analysis.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>High Performance</h3>
+                    <p>Optimized decoding engine processes up to 1MB/second with minimal memory overhead and efficient caching.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Clean Output</h3>
+                    <p>Professional Intel syntax formatting with structured display and comprehensive operand representation.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Production Ready</h3>
+                    <p>Robust error handling, input validation, and safe memory operations ensure reliability in all scenarios.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Flexible Analysis</h3>
+                    <p>Target specific address ranges, analyze individual sections, or disassemble entire executables with ease.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="demo" class="code-preview">
+            <h2 class="section-title">See It In Action</h2>
+            <div class="code-container">
+                <div class="code-header">
+                    <div class="code-dot dot-red"></div>
+                    <div class="code-dot dot-yellow"></div>
+                    <div class="code-dot dot-green"></div>
+                    <span style="margin-left: 1rem; color: #888;">output.txt</span>
+                </div>
+                <div class="code-content">
+                    <div class="code-line">
+                        <span class="code-address">0000000140001000</span>
+                        <span class="code-bytes">48 89 5c 24 08</span>
+                        <span class="code-instruction">mov</span>
+                        <span class="code-operands">QWORD PTR [rsp+0x8], rbx</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="code-address">0000000140001005</span>
+                        <span class="code-bytes">48 89 74 24 10</span>
+                        <span class="code-instruction">mov</span>
+                        <span class="code-operands">QWORD PTR [rsp+0x10], rsi</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="code-address">000000014000100a</span>
+                        <span class="code-bytes">57</span>
+                        <span class="code-instruction">push</span>
+                        <span class="code-operands">rdi</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="code-address">000000014000100b</span>
+                        <span class="code-bytes">48 83 ec 20</span>
+                        <span class="code-instruction">sub</span>
+                        <span class="code-operands">rsp, 0x20</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="code-address">000000014000100f</span>
+                        <span class="code-bytes">48 8b f9</span>
+                        <span class="code-instruction">mov</span>
+                        <span class="code-operands">rdi, rcx</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="code-address">0000000140001012</span>
+                        <span class="code-bytes">e8 a9 00 00 00</span>
+                        <span class="code-instruction">call</span>
+                        <span class="code-operands">0x01400010c0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stats" class="stats">
+            <h2 class="section-title">By The Numbers</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">1500+</div>
+                    <div class="stat-label">Lines of Code</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Dependencies</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1MB/s</div>
+                    <div class="stat-label">Decode Speed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Pure C++</div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="https://github.com/slyemane/DisassemblerX">GitHub</a>
+                    <a href="https://github.com/slyemane/DisassemblerX/releases">Download</a>
+                    <a href="https://github.com/slyemane/DisassemblerX/issues">Report Bug</a>
+                    <a href="https://github.com/slyemane">@slyemane</a>
+                </div>
+                <p class="copyright">
+                    Copyright © 2025 @slyemane - All Rights Reserved<br>
+                    Made with ❤️ for the reverse engineering community
+                </p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
